@@ -2,6 +2,8 @@ import os
 import requests
 from datetime import datetime
 from typing import Optional
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.http import JsonResponse
 from django_apscheduler.jobstores import DjangoJobStore
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -14,6 +16,7 @@ from tasks.utils import notify_task
 headers = {
     'Authorization': f'Bearer {os.getenv("JWT_TOKEN")}',
 }
+
 
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), "default")
@@ -178,7 +181,7 @@ async def send_finish_task_to_drf_api(api_url, headers):
         if 'detail' in data:
             raise ValueError('Permission denied.')
 
-        if data.get('finished', False):
+        if data['finished']:
             return True, 'Task completed successfully.'
         else:
             return True, 'Task uncompleted successfully.'

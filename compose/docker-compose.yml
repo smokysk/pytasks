@@ -11,5 +11,10 @@ services:
     volumes:
       - db-data2:/var/lib/postgresql/data
 
-volumes:
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - "6379:6379"
+volumes:  
   db-data2:
