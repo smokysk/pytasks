@@ -13,11 +13,17 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from os.path import join, exists
 from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+db_conf = os.path.join(BASE_DIR, 'db.conf')
+
+if exists(db_conf):
+    load_dotenv(db_conf)
 
 
 # Quick-start development settings - unsuitable for production
@@ -88,10 +94,22 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+ENGINE = os.environ.get('DB_ENGINE')
+NAME = os.environ.get('POSTGRES_DB')
+HOST = os.environ.get('POSTGRES_HOST')
+PORT = os.environ.get('POSTGRES_PORT')
+USER = os.environ.get('POSTGRES_USER')
+PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': ENGINE,
+        'NAME': NAME,
+        'HOST': HOST,
+        'PORT': PORT,
+        'USER': USER,
+        'PASSWORD': PASSWORD
     }
 }
 
