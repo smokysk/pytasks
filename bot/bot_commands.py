@@ -8,11 +8,12 @@ from datetime import datetime
 
 load_dotenv()
 
-token = os.getenv('JWT_TOKEN')
-headers = {
-        'Authorization': f'Bearer {token}',
-    }
+DRF_API_URL = os.getenv('DRF_API_URL')
+if not DRF_API_URL:
+    raise ValueError("DRF_API_URL is not configured.")
 
+token = os.getenv('JWT_TOKEN')
+headers = {'Authorization': f'Bearer {token}'}
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
